@@ -1,0 +1,8 @@
+Alice: Bob, Mark, Katy, Ema
+Bob: Mark, Katy, Rob, Alice
+Rob: Bob, Katy
+Katy: Bob, Alice, Rob
+Ema: Alice, Mark
+Mark: Alice, Bob, Ema, Katy
+John: Eddie
+Eddie: John
