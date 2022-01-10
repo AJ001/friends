@@ -11,6 +11,9 @@ import java.util.TreeMap;
 import my.friends.validator.NetworkValidator;
 import my.friends.validator.UserValidator;
 
+/**
+ * Holds the state of the network and offers methods to manage it
+ */
 public class FriendsNetwork {
 
     private final Map<User, Set<User>> friendships;
@@ -25,18 +28,36 @@ public class FriendsNetwork {
         this.friendships = new HashMap<>(friendships);
     }
 
-
+    /**
+     * Returns a snapshot of the current friendships of the network
+     *
+     * @return an immutable map containing the users and the friendships
+     */
     public Map<User, Set<User>> getFriendships() {
 
         return Collections.unmodifiableMap(friendships);
     }
 
+    /**
+     * Adds a bidirectional connection between the given users; if any of the users are not part of the network,
+     * they are implicitly added, including the associated direct connection
+     *
+     * @param user   an user
+     * @param friend the new friend
+     */
     public void addFriendshipFor(User user, User friend) {
 
         new UserValidator().validateUsers(user, friend);
         addBiDirectionalFriendship(user, friend);
     }
 
+    /**
+     * Adds bidirectional connections between the given user and its friends; if any of the users are not part of the network,
+     * they are implicitly added, including the associated direct connections with the user
+     *
+     * @param user    an user
+     * @param friends the new friends
+     */
     public void addFriendshipsFor(User user, User... friends) {
 
         new UserValidator().validateUsers(user, friends);
@@ -44,6 +65,13 @@ public class FriendsNetwork {
                 .forEach(friend -> addBiDirectionalFriendship(user, friend));
     }
 
+    /**
+     * Removes the bidirectional direct connection between the given users; in case any user remains without friends, it will be
+     * implicitly removed from the network as well
+     *
+     * @param user   an user
+     * @param friend the friend to be removed
+     */
     public void removeFriendship(User user, User friend) {
 
         new NetworkValidator().validateFriendshipExists(this.friendships, user, friend);
@@ -52,6 +80,12 @@ public class FriendsNetwork {
         removeUsersWithoutFriends();
     }
 
+    /**
+     * Removes the given user from the network together with its friendships; in case any user remains without friends, it will be
+     * implicitly removed from the network as well
+     *
+     * @param user the user to be removed
+     */
     public void removeUser(User user) {
 
         new UserValidator().validateUser(user);
@@ -63,7 +97,9 @@ public class FriendsNetwork {
         removeUsersWithoutFriends();
     }
 
-
+    /**
+     * Displays the current state of the network
+     */
     public void displayNetwork() {
 
         Map<User, Set<User>> sortedFriendships = new TreeMap<>(friendships);
